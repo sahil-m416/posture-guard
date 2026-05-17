@@ -1,4 +1,4 @@
-import { PostureDetector } from '../shared/posture.js';
+import { PostureDetector } from './shared/posture.js';
 
 // ── DOM refs ──
 const video       = document.getElementById('video');
