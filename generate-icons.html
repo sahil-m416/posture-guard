@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head><title>Icon Generator</title></head>
+<body>
+<p>Right-click each canvas and "Save image as" to save the icons.</p>
+<div id="canvases"></div>
+<script>
+const sizes = [16, 48, 128];
+sizes.forEach(size => {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  canvas.title = `icon${size}.png`;
+  const ctx = canvas.getContext('2d');
+
+  // Background circle
+  const grad = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+  grad.addColorStop(0, '#7c3aed');
+  grad.addColorStop(1, '#4c1d95');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(size/2, size/2, size/2, 0, Math.PI*2);
+  ctx.fill();
+
+  // Draw simple person silhouette
+  ctx.fillStyle = '#fff';
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = size * 0.08;
+  ctx.lineCap = 'round';
+
+  const cx = size / 2;
+  const headR = size * 0.13;
+  const headY = size * 0.28;
+  // Head
+  ctx.beginPath();
+  ctx.arc(cx, headY, headR, 0, Math.PI*2);
+  ctx.fill();
+
+  // Spine (straight = good posture)
+  ctx.beginPath();
+  ctx.moveTo(cx, headY + headR);
+  ctx.lineTo(cx, size * 0.72);
+  ctx.stroke();
+
+  // Shoulders
+  ctx.beginPath();
+  ctx.moveTo(cx - size*0.22, size*0.42);
+  ctx.lineTo(cx + size*0.22, size*0.42);
+  ctx.stroke();
+
+  // Legs
+  ctx.beginPath();
+  ctx.moveTo(cx, size*0.72);
+  ctx.lineTo(cx - size*0.14, size*0.88);
+  ctx.moveTo(cx, size*0.72);
+  ctx.lineTo(cx + size*0.14, size*0.88);
+  ctx.stroke();
+
+  const label = document.createElement('p');
+  label.textContent = `${size}x${size} — icon${size}.png`;
+  label.style.fontFamily = 'monospace';
+  label.style.fontSize = '12px';
+  label.style.marginTop = '8px';
+
+  const dl = document.createElement('a');
+  dl.textContent = `Download icon${size}.png`;
+  dl.style.display = 'block';
+  dl.style.marginBottom = '20px';
+  dl.style.fontFamily = 'sans-serif';
+  dl.style.color = '#7c3aed';
+  dl.href = canvas.toDataURL('image/png');
+  dl.download = `icon${size}.png`;
+
+  document.getElementById('canvases').appendChild(label);
+  document.getElementById('canvases').appendChild(canvas);
+  document.getElementById('canvases').appendChild(dl);
+});
+</script>
+</body>
+</html>

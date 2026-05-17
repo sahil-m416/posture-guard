@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PostureGuard — Real-time Slouch Detection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-icon">🧘</span>
+    <span>PostureGuard</span>
+    <span class="badge">Beta</span>
+  </div>
+  <nav class="header-links">
+    <a href="#" id="install-ext-link">Install Extension</a>
+    <a href="https://github.com/sahil-m416/posture-guard" target="_blank">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <!-- Camera + status -->
+  <div class="camera-panel">
+    <div class="video-wrapper">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="canvas"></canvas>
+      <div class="video-overlay" id="video-overlay">
+        <span class="overlay-icon">📷</span>
+        <p>Click <strong>Start Monitoring</strong> to enable your camera and begin posture tracking.</p>
+      </div>
+    </div>
+
+    <div class="status-bar" id="status-bar">
+      <div class="status-dot"></div>
+      <div class="status-text">
+        <strong id="status-title">Not monitoring</strong>
+        <span id="status-sub">Press start to begin</span>
+      </div>
+      <div class="slouch-score">
+        <label>Slouch risk</label>
+        <div class="score-bar">
+          <div class="score-fill" id="score-fill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="btn-start">▶ Start Monitoring</button>
+      <button class="btn btn-secondary" id="btn-calibrate" disabled>Calibrate</button>
+      <button class="btn btn-secondary" id="btn-stop" disabled>■ Stop</button>
+    </div>
+  </div>
+
+  <!-- Side panel -->
+  <div class="side-panel">
+    <!-- Session stats -->
+    <div class="card">
+      <h3>Session Stats</h3>
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-value" id="stat-alerts">0</div>
+          <div class="stat-label">Slouch alerts</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="stat-duration">0m</div>
+          <div class="stat-label">Session time</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="stat-good-pct">—</div>
+          <div class="stat-label">Good posture %</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="stat-last-alert">—</div>
+          <div class="stat-label">Last alert</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="card">
+      <h3>Alert Settings</h3>
+
+      <div class="config-row">
+        <div>
+          <div class="config-label">Sound alert</div>
+          <div class="config-sub">Beep when slouch detected</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="cfg-sound" checked />
+          <span class="toggle-track"></span>
+          <span class="toggle-thumb"></span>
+        </label>
+      </div>
+
+      <div class="config-row">
+        <div>
+          <div class="config-label">Browser notification</div>
+          <div class="config-sub">System popup alert</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="cfg-notify" />
+          <span class="toggle-track"></span>
+          <span class="toggle-thumb"></span>
+        </label>
+      </div>
+
+      <div class="config-row">
+        <div>
+          <div class="config-label">Draw skeleton</div>
+          <div class="config-sub">Show pose on video</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="cfg-skeleton" checked />
+          <span class="toggle-track"></span>
+          <span class="toggle-thumb"></span>
+        </label>
+      </div>
+
+      <div class="config-row">
+        <div>
+          <div class="config-label">Alert cooldown</div>
+          <div class="config-sub">Seconds between alerts</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="range" id="cfg-cooldown" min="10" max="120" value="30" step="5" />
+          <span class="range-val" id="cfg-cooldown-val">30s</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert log -->
+    <div class="card">
+      <h3>Alert Log</h3>
+      <div class="alert-log" id="alert-log">
+        <div class="log-empty" id="log-empty">No alerts yet — great posture! 🎉</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Slouch toast alert -->
+<div id="slouch-alert">🚨 Sit up straight!</div>
+
+<!-- Calibration overlay -->
+<div id="calibration-overlay">
+  <div class="cal-box">
+    <h2>Calibrating</h2>
+    <p>Sit up straight, shoulders back, eyes on screen. Hold this posture for 3 seconds.</p>
+    <div class="cal-countdown" id="cal-countdown">3</div>
+    <div class="cal-progress">
+      <div class="cal-progress-fill" id="cal-progress-fill" style="width:0%"></div>
+    </div>
+    <button class="btn btn-secondary" id="btn-cancel-cal">Cancel</button>
+  </div>
+</div>
+
+<!-- MediaPipe via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
