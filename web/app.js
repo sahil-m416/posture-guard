@@ -335,6 +335,22 @@ function startCalibration() {
   };
 }
 
+// ── Theme toggle ──
+const themeToggle = document.getElementById('theme-toggle');
+const savedTheme = localStorage.getItem('theme') || 'dark';
+applyTheme(savedTheme);
+
+themeToggle.addEventListener('click', () => {
+  const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  applyTheme(next);
+  localStorage.setItem('theme', next);
+});
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+}
+
 // ── Event listeners ──
 btnStart.addEventListener('click', startMonitoring);
 btnStop.addEventListener('click', stopMonitoring);
