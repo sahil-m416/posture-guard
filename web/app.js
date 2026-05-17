@@ -51,8 +51,13 @@ cfgCooldown.addEventListener('input', () => {
   cfgCooldownVal.textContent = cfgCooldown.value + 's';
 });
 
-cfgNotify.addEventListener('change', () => {
-  if (cfgNotify.checked) Notification.requestPermission();
+cfgNotify.addEventListener('change', async () => {
+  if (!cfgNotify.checked) return;
+  const result = await Notification.requestPermission();
+  if (result === 'denied') {
+    cfgNotify.checked = false;
+    alert('Notification permission denied. Enable it in your browser site settings and try again.');
+  }
 });
 
 // ── Posture detector callbacks ──
@@ -190,7 +195,6 @@ function onSlouch(details) {
   if (cfgNotify.checked && Notification.permission === 'granted') {
     new Notification('PostureGuard 🚨', {
       body: 'You\'re slouching! Sit up and pull your shoulders back.',
-      icon: '../extension/icons/icon128.png',
     });
   }
 }
@@ -334,6 +338,26 @@ function startCalibration() {
     calOverlay.classList.remove('visible');
   };
 }
+
+// ── Tab visibility warning ──
+// Chrome throttles requestAnimationFrame on hidden tabs, so MediaPipe stops.
+// Best we can do: fire a notification the moment the user leaves if already slouching,
+// and show a warning banner so they know detection is paused.
+const tabWarning = document.getElementById('tab-warning');
+document.addEventListener('visibilitychange', () => {
+  if (!isMonitoring) return;
+  if (document.hidden) {
+    tabWarning.classList.remove('hidden');
+    // If already slouching when they left, notify immediately
+    if (detector.isSlouching && cfgNotify.checked && Notification.permission === 'granted') {
+      new Notification('PostureGuard 🚨', {
+        body: 'You were slouching when you left — fix your posture!',
+      });
+    }
+  } else {
+    tabWarning.classList.add('hidden');
+  }
+});
 
 // ── Theme toggle ──
 const themeToggle = document.getElementById('theme-toggle');
