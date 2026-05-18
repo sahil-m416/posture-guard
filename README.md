@@ -4,7 +4,7 @@ Real-time posture monitoring using your webcam. Alerts you when you're slouching
 
 Built with [MediaPipe Pose](https://google.github.io/mediapipe/solutions/pose) + vanilla JS.
 
-**[Live Demo →](https://posture-guard.vercel.app)**
+**[Live Demo →](https://posture-guard-ten.vercel.app)**
 
 ---
 
@@ -24,7 +24,7 @@ Built with [MediaPipe Pose](https://google.github.io/mediapipe/solutions/pose) +
 
 ### Option 1 — Live Web App
 
-Visit **[posture-guard.vercel.app](https://posture-guard.vercel.app)** — no install needed.
+Visit **[posture-guard-ten.vercel.app](https://posture-guard-ten.vercel.app)** — no install needed.
 
 Or run locally:
 
